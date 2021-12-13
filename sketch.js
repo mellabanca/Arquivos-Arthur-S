@@ -2,10 +2,13 @@
 var trex, trexCorrendo;
 var solo,imagem;
 var inv;
+var nuvem;
+var nuvemm;
 function preload(){
 //Carrega as imagens para a animação do T-rex
 trexCorrendo = loadAnimation("trex1.png","trex3.png","trex4.png");
-imagem=loadImage("ground2.png")
+imagem=loadImage("ground2.png"); 
+nuvemm=loadImage("cloud.png");
 }
 
 function setup(){
@@ -49,5 +52,13 @@ drawSprites();
 }
 
 function gerarNuvens(){
-    
+if(frameCount%119   ===0){
+    nuvem=createSprite(1200,100,40,10) ;
+    nuvem.addImage(nuvemm);
+    nuvem.y=Math.round(random(10,200));
+    nuvem.velocityX=-3;  
+    nuvem.depth=trex.depth;
+    trex.depth=trex.depth+1
+}
+ 
 }
