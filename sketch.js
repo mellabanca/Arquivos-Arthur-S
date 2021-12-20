@@ -45,36 +45,40 @@ pontos = 0;
 
 grupodenuvens = new Group();
 grupodeobs = new Group();
+
+trex.debug = false;
+trex.setCollider("circle", 0, 0, 40);
 }
 function draw(){
 //console.log(trex.y); 
 //pinta o fundo da tela do jogo de branco
 background("black");
 text("Pontuação:"+pontos, 500,50);
-pontos = pontos + Math.round(frameCount/60);
-
 if(estado === jogando){
-    solo.velocityX=-2;
-} else if(estado === morreu){
-    solo.velocityX = 0;
-}
-
-    
-
-if(solo.x<0){
-solo.x=solo.width/2;
-}
-//Faz o trex pular quando aperta a tecla espaço
+    solo.velocityX=-4;
+    pontos = pontos + Math.round(frameCount/60);
+    if(solo.x<0){
+        solo.x=solo.width/2;
+        }
+    //Faz o trex pular quando aperta a tecla espaço
 if(keyDown("space")&&trex.y>=300){
-trex.velocityY = -13;
-}
-//Sistema degravidade
+    trex.velocityY = -13;
+    }  
+      //Sistema degravidade
 trex.velocityY = trex.velocityY + 1;
-//Impede que o T-rex caia da tela
-trex.collide(inv);
 //chamar uma função que desenha as nuvens
 gerarNuvens();
 gerarobs();
+if(grupodeobs.isTouching(trex)){
+    estado=morreu;
+}
+} else if(estado === morreu){
+    solo.velocityX = 0;
+    grupodenuvens.setVelocityXEach(0);
+    grupodeobs.setVelocityXEach(0);
+}
+//Impede que o T-rex caia da tela
+trex.collide(inv);
 //Desenha todos os sprites
 drawSprites();
 }
@@ -84,7 +88,7 @@ if(frameCount%119   ===0){
     nuvem=createSprite(1200,100,40,10) ;
     nuvem.addImage(nuvemm);
     nuvem.y=Math.round(random(10,200));
-    nuvem.velocityX=-3;  
+    nuvem.velocityX=-6;  
     nuvem.depth=trex.depth;
     trex.depth=trex.depth+1
     nuvem.lifetime=499; 
@@ -95,7 +99,7 @@ if(frameCount%119   ===0){
 function gerarobs(){
     if(frameCount%119   ===0){
        var  obs =createSprite(1200,365,10,40) ;
-        obs      .velocityX=-3;
+        obs      .velocityX=-6;
 var numero= Math.round(random(1,6));
 switch (numero) {
     case 1:obs.addImage(obs1); 
