@@ -16,6 +16,9 @@ var gameover;
 var gameoverfoto;
 var resetar;
 var resetarimagem;
+var pulo,morte,point;
+var mensagem = "Isso é uma mensagem";
+
 function preload(){
 //Carrega as imagens para a animação do T-rex
 trexCorrendo = loadAnimation("trex1.png","trex3.png","trex4.png");
@@ -30,6 +33,9 @@ obs6=loadImage("obstacle6.png");
 f=loadAnimation("trex_collided.png");
 gameoverfoto=loadImage("gameOver.png");
 resetarimagem=loadImage("restart.png");
+pulo=loadSound("jump.mp3");
+morte=loadSound("die.mp3");
+point=loadSound("checkPoint.mp3");
 }
 
 function setup(){
@@ -57,25 +63,31 @@ grupodeobs = new Group();
 
 trex.debug = false;
 trex.setCollider("circle", 0, 0, 40);
-gameover=createSprite(300,100);
+gameover=createSprite(600,100);
 gameover.addImage(gameoverfoto);
-resetar=createSprite(300,140);
+resetar=createSprite(600,180);
 resetar.addImage(resetarimagem);
+
 }
 function draw(){
+//console.log(mensagem);
 //console.log(trex.y); 
 //pinta o fundo da tela do jogo de branco
 background("black");
 text("Pontuação:"+pontos, 500,50);
 if(estado === jogando){
-    solo.velocityX=-4;
+    solo.velocityX=-(4+pontos/100);
     pontos = pontos + Math.round(frameCount/60);
+    if(pontos%100   ===0&& pontos>0){
+    point.play();
+    }
     if(solo.x<0){
         solo.x=solo.width/2;
         }
     //Faz o trex pular quando aperta a tecla espaço
 if(keyDown("space")&&trex.y>=300){
     trex.velocityY = -15;
+    pulo.play();
     }  
       //Sistema degravidade
 trex.velocityY = trex.velocityY + 1;
@@ -84,6 +96,7 @@ gerarNuvens();
 gerarobs();
 if(grupodeobs.isTouching(trex)){
     estado=morreu;
+    morte.play();
 }
 } else if(estado === morreu){
     solo.velocityX = 0;
@@ -96,8 +109,17 @@ if(grupodeobs.isTouching(trex)){
 }
 //Impede que o T-rex caia da tela
 trex.collide(inv);
+
+if(mousePressedOver(resetar)){
+    //console.log("REINICIE O JOGO!");
+    reset();
+}
 //Desenha todos os sprites
 drawSprites();
+}
+
+function reset(){
+    
 }
 
 function gerarNuvens(){
@@ -116,7 +138,7 @@ if(frameCount%119   ===0){
 function gerarobs(){
     if(frameCount%119   ===0){
        var  obs =createSprite(1200,365,10,40) ;
-        obs      .velocityX=-6;
+        obs      .velocityX=-(6+pontos/100);
 var numero= Math.round(random(1,6));
 switch (numero) {
     case 1:obs.addImage(obs1); 
